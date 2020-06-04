@@ -1,5 +1,6 @@
 package com.klweb.farmservice.mapper;
 
+import com.klweb.farmservice.dto.CreateFarmDto;
 import com.klweb.farmservice.dto.UpdateFarmDto;
 import com.klweb.farmservice.dto.UserDTO;
 import com.klweb.farmservice.model.Farm;
@@ -15,6 +16,8 @@ import fr.xebia.extras.selma.Mapper;
 	)
 public interface SelmaMapper {
 	Farm updateFarm(UpdateFarmDto source, Farm destination);
+	
+	Farm asFarm(CreateFarmDto in);
 	
 	UserDTO asUserDTO(User in);
 	

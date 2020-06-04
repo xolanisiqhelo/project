@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.klweb.farmservice.model.Farm;
 import com.klweb.farmservice.model.User;
+import com.klweb.farmservice.dto.CreateFarmDto;
 import com.klweb.farmservice.dto.UpdateFarmDto;
 import com.klweb.farmservice.mapper.SelmaMapper;
 import com.klweb.farmservice.model.ErrorMessage;
@@ -25,9 +26,12 @@ import com.klweb.farmservice.repo.FarmRepository;
 import com.klweb.farmservice.repo.UserRepository;
 
 import fr.xebia.extras.selma.Selma;
+import io.swagger.annotations.Api;
+
 
 @RestController
 @RequestMapping(path="/api/farm")
+@Api(value = "Farm Service", tags = {"Farm Service"}, produces = "application/json", consumes = "application/json")
 public class FarmController {
 	@Autowired private FarmRepository farmRepo;
 	@Autowired private UserRepository userRepo;
@@ -37,7 +41,7 @@ public class FarmController {
 	// Add user to new Farm
 	@PostMapping(path="user/{user_id}", consumes = "application/json")
 	public ResponseEntity<Object> createFarm(
-			@RequestBody(required = true) Farm createFarm,
+			@RequestBody(required = true) CreateFarmDto createFarm,
 			@PathVariable(name="user_id", required = true) String user_id){
 		
 		try {
@@ -49,15 +53,17 @@ public class FarmController {
 				return new ResponseEntity<>(message.toString(), HttpStatus.NOT_FOUND);
 			}else {
 				// save farm
-				Farm farm = farmRepo.save(createFarm);				
+				Farm farm = mapper.asFarm(createFarm);
+				
+				Farm savedFarm = farmRepo.save(farm);				
 				
 	            // add farm to the user
-	            user.get().getFarms().add(createFarm);
+	            user.get().getFarms().add(farm);
 
 	            // update the user
 	            userRepo.saveAndFlush(user.get());
 	            
-	            Optional<Farm> updatedFarm = farmRepo.findById(farm.getId());
+	            Optional<Farm> updatedFarm = farmRepo.findById(savedFarm.getId());
 	            return new ResponseEntity<>(updatedFarm, HttpStatus.OK);
 			}
 					
@@ -203,5 +209,7 @@ public class FarmController {
 //			return new ResponseEntity<>(message.toString(), HttpStatus.BAD_REQUEST);
 //		}
 //	}
+	
+	
 	
 }

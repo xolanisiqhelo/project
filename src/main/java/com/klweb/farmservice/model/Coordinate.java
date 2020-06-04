@@ -10,7 +10,7 @@ import com.google.gson.Gson;
 
 @Entity
 @Table(name="coordinate")
-public class Coordinate {
+public class Coordinate extends AuditModel{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

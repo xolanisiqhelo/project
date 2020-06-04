@@ -25,7 +25,7 @@ import com.google.gson.Gson;
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
-public class Farm implements Serializable{
+public class Farm extends AuditModel{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
